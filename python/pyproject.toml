@@ -1,0 +1,9 @@
+[project]
+name = "cameras"
+version = "1.0.0"
+description = "Camera implementations in python"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "numpy>=2.3.0",
+]
