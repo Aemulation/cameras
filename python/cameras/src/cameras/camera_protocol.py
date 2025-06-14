@@ -3,8 +3,6 @@ from typing import Callable, Dict, Protocol, Optional, Type
 
 import numpy as np
 
-from .dhyana2100.camera import *  # noqa # pylint: disable=unused-import
-
 
 class CameraProtocol(Protocol):
     def __init__(self, *args, **kwargs) -> None: ...

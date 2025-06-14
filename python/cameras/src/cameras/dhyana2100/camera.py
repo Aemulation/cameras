@@ -3,7 +3,11 @@ import ctypes
 from typing import Any, Optional
 import numpy as np
 
-from cameras import CameraFactoryProtocol, CameraProtocol, CameraFactoryClassRegistry
+from cameras.camera_protocol import (
+    CameraFactoryProtocol,
+    CameraProtocol,
+    CameraFactoryClassRegistry,
+)
 
 CAMERA_NAME = "dhyana2100"
 
