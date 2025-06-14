@@ -50,7 +50,7 @@ class CameraFactoryProtocol(Protocol):
 
 
 class CameraFactoryClassRegistry:
-    registry: Dict[str, Type[CameraFactoryProtocol]]
+    registry: Dict[str, Type[CameraFactoryProtocol]] = {}
 
     @classmethod
     def register(cls, camera_factory_name: str) -> Callable:
