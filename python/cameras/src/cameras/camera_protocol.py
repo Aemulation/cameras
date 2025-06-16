@@ -54,6 +54,12 @@ class CameraFactoryClassRegistry:
 
     @classmethod
     def register(cls, camera_factory_name: str) -> Callable:
+        print(f"[DEBUG] cls: {cls}")
+        print(f"[DEBUG] cls.__name__: {cls.__name__}")
+        print(f"[DEBUG] cls.__dict__.keys(): {list(cls.__dict__.keys())}")
+        print(f"[DEBUG] cls.registry (exists?): {'registry' in cls.__dict__}")
+        print(f"[DEBUG] cls.registry: {getattr(cls, 'registry', 'Not Found')}")
+
         def inner_wrapper(
             wrapped_factory: Type[CameraFactoryProtocol],
         ) -> Type[CameraFactoryProtocol]:
