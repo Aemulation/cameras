@@ -84,7 +84,9 @@ class Camera(CameraProtocol):
 
     def __setup_bindings(self):
         this_path = os.path.dirname(os.path.abspath(__file__))
-        relative_dll_path = "../../../cameras/dhyana2100/build/Release/dhyana2100.dll"
+        relative_dll_path = (
+            "../../../../../cameras/dhyana2100/build/Release/dhyana2100.dll"
+        )
 
         dll_path = os.path.abspath(this_path + "/" + relative_dll_path)
         if not os.path.exists(dll_path):
