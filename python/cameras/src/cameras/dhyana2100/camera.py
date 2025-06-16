@@ -102,7 +102,7 @@ class Camera(CameraProtocol):
         self.__enable_TEC = enable_TEC
 
         self.__camera_index = camera_index
-        self.number_of_copy_threads_per_buffer = number_of_copy_threads_per_buffer
+        self.__number_of_copy_threads_per_buffer = number_of_copy_threads_per_buffer
 
         self.__fast_binning = fast_binning
         self.__number_of_frame_buffers = number_of_frame_buffers
@@ -244,7 +244,7 @@ class Camera(CameraProtocol):
 
         self.__camera = self.__camera_open(
             ctypes.c_int(self.__camera_index),
-            ctypes.c_uint(self.number_of_copy_threads_per_buffer),
+            ctypes.c_uint(self.__number_of_copy_threads_per_buffer),
         )
 
         self.update_configs()
