@@ -82,6 +82,8 @@ class Camera(CameraProtocol):
 
         self.__setup_bindings()
 
+        self.set_config(CameraConfig(**(self.__config.to_dict() | {"full_mode": 1})))
+
     def __setup_bindings(self):
         this_path = os.path.dirname(os.path.abspath(__file__))
         relative_dll_path = (
