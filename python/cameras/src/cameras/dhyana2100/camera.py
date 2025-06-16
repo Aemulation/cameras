@@ -10,6 +10,7 @@ from cameras.camera_protocol import (
 )
 
 CAMERA_NAME = "dhyana2100"
+VALID_BITS_PER_PIXEL = (8, 10, 12)
 
 
 class CameraConfig(ctypes.Structure):
@@ -90,10 +91,9 @@ class Camera(CameraProtocol):
         bits_per_pixel: int,
         input_trigger: int,
     ) -> None:
-        valid_bits_per_pixel = (8, 10, 12)
-        if bits_per_pixel not in valid_bits_per_pixel:
+        if bits_per_pixel not in VALID_BITS_PER_PIXEL:
             raise ValueError(
-                f"invalid bits_per_pixel, options are {valid_bits_per_pixel}"
+                f"invalid bits_per_pixel, options are {VALID_BITS_PER_PIXEL}"
             )
 
         self.__camera = None
