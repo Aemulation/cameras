@@ -82,8 +82,6 @@ class Camera(CameraProtocol):
 
         self.__setup_bindings()
 
-        self.set_config(CameraConfig(**(self.__config.to_dict() | {"full_mode": 1})))
-
     def __setup_bindings(self):
         this_path = os.path.dirname(os.path.abspath(__file__))
         relative_dll_path = (
@@ -220,6 +218,7 @@ class Camera(CameraProtocol):
         )
 
         self.update_configs()
+        self.set_config(CameraConfig(**(self.__config.to_dict() | {"full_mode": 1})))
         self.set_temperature(self.__enable_fan, self.__enable_TEC)
 
     def close(self):
