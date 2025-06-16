@@ -62,6 +62,7 @@ class CameraFactory(CameraFactoryProtocol):
         trigger_frames: int = 1,
         bits_per_pixel: int = 12,
         input_trigger: int = 0,
+        full_mode: bool = True,
         *args,
         **kwargs,
     ) -> CameraProtocol:
@@ -75,6 +76,7 @@ class CameraFactory(CameraFactoryProtocol):
             trigger_frames,
             bits_per_pixel,
             input_trigger,
+            full_mode,
         )
 
 
@@ -90,6 +92,7 @@ class Camera(CameraProtocol):
         trigger_frames: int,
         bits_per_pixel: int,
         input_trigger: int,
+        full_mode: bool = True,
     ) -> None:
         if bits_per_pixel not in VALID_BITS_PER_PIXEL:
             raise ValueError(
@@ -109,6 +112,7 @@ class Camera(CameraProtocol):
         self.__trigger_frames = trigger_frames
         self.__bits_per_pixel = bits_per_pixel
         self.__input_trigger = input_trigger
+        self.__full_mode = full_mode
 
         self.__setup_bindings()
 
@@ -249,7 +253,7 @@ class Camera(CameraProtocol):
 
         self.update_configs()
         new_config = {
-            "full_mode": 1,
+            "full_mode": 1 if self.__full_mode else 0,
             "fast_binning": 1 if self.__fast_binning else 0,
             "trigger_frames": self.__trigger_frames,
             "input_trigger": self.__input_trigger,
