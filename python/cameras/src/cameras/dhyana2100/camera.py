@@ -55,11 +55,13 @@ class CameraFactory(CameraFactoryProtocol):
         camera_index: int = 0,
         enable_fan: bool = True,
         enable_TEC: bool = True,
-        num_copy_threads_per_buffer: int = 8,
+        number_of_copy_threads_per_buffer: int = 8,
         *args,
         **kwargs,
     ) -> CameraProtocol:
-        return Camera(camera_index, enable_fan, enable_TEC, num_copy_threads_per_buffer)
+        return Camera(
+            camera_index, enable_fan, enable_TEC, number_of_copy_threads_per_buffer
+        )
 
 
 class Camera(CameraProtocol):
@@ -68,7 +70,7 @@ class Camera(CameraProtocol):
         camera_index: int,
         enable_fan: bool,
         enable_TEC: bool,
-        num_copy_threads_per_buffer: int,
+        number_of_copy_threads_per_buffer: int,
     ) -> None:
         self.__camera = None
         self.__buffer_shape = None
@@ -76,7 +78,7 @@ class Camera(CameraProtocol):
         self.__enable_TEC = enable_TEC
 
         self.__camera_index = camera_index
-        self.__num_copy_threads_per_buffer = num_copy_threads_per_buffer
+        self.number_of_copy_threads_per_buffer = number_of_copy_threads_per_buffer
 
         self.__setup_bindings()
 
@@ -212,7 +214,7 @@ class Camera(CameraProtocol):
 
         self.__camera = self.__camera_open(
             ctypes.c_int(self.__camera_index),
-            ctypes.c_uint(self.__num_copy_threads_per_buffer),
+            ctypes.c_uint(self.number_of_copy_threads_per_buffer),
         )
 
         self.update_configs()
