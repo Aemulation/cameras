@@ -56,11 +56,24 @@ class CameraFactory(CameraFactoryProtocol):
         enable_fan: bool = True,
         enable_TEC: bool = True,
         number_of_copy_threads_per_buffer: int = 8,
+        fast_binning: bool = True,
+        number_of_frame_buffers: int = 256,
+        trigger_frames: int = 1,
+        bits_per_pixel: int = 12,
+        input_trigger: int = 0,
         *args,
         **kwargs,
     ) -> CameraProtocol:
         return Camera(
-            camera_index, enable_fan, enable_TEC, number_of_copy_threads_per_buffer
+            camera_index,
+            enable_fan,
+            enable_TEC,
+            number_of_copy_threads_per_buffer,
+            fast_binning,
+            number_of_frame_buffers,
+            trigger_frames,
+            bits_per_pixel,
+            input_trigger,
         )
 
 
@@ -71,7 +84,18 @@ class Camera(CameraProtocol):
         enable_fan: bool,
         enable_TEC: bool,
         number_of_copy_threads_per_buffer: int,
+        fast_binning: bool,
+        number_of_frame_buffers: int,
+        trigger_frames: int,
+        bits_per_pixel: int,
+        input_trigger: int,
     ) -> None:
+        valid_bits_per_pixel = (8, 10, 12)
+        if bits_per_pixel not in valid_bits_per_pixel:
+            raise ValueError(
+                f"invalid bits_per_pixel, options are {valid_bits_per_pixel}"
+            )
+
         self.__camera = None
         self.__buffer_shape = None
         self.__enable_fan = enable_fan
@@ -79,6 +103,12 @@ class Camera(CameraProtocol):
 
         self.__camera_index = camera_index
         self.number_of_copy_threads_per_buffer = number_of_copy_threads_per_buffer
+
+        self.__fast_binning = fast_binning
+        self.__number_of_frame_buffers = number_of_frame_buffers
+        self.__trigger_frames = trigger_frames
+        self.__bits_per_pixel = bits_per_pixel
+        self.__input_trigger = input_trigger
 
         self.__setup_bindings()
 
@@ -218,7 +248,15 @@ class Camera(CameraProtocol):
         )
 
         self.update_configs()
-        self.set_config(CameraConfig(**(self.__config.to_dict() | {"full_mode": 1})))
+        new_config = {
+            "full_mode": 1,
+            "fast_binning": 1 if self.__fast_binning else 0,
+            "trigger_frames": self.__trigger_frames,
+            "input_trigger": self.__input_trigger,
+            "bits_per_pixel": self.__bits_per_pixel,
+            "num_buffer_frames": self.__number_of_frame_buffers,
+        }
+        self.set_config(CameraConfig(**(self.__config.to_dict() | new_config)))
         self.set_temperature(self.__enable_fan, self.__enable_TEC)
 
     def close(self):
