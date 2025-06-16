@@ -61,3 +61,14 @@ class CameraFactoryClassRegistry:
             return wrapped_factory
 
         return inner_wrapper
+
+    @classmethod
+    def create(cls, camera_name: str, **kwargs) -> CameraProtocol:
+        try:
+            camera_factory = cls.registry[camera_name]
+            camera = camera_factory.create(**kwargs)
+            return camera
+        except KeyError:
+            raise ValueError(
+                f"Camera {camera_name} not found, available camera's are: {','.join(cls.registry.keys())}"
+            )
