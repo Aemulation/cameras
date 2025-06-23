@@ -251,8 +251,8 @@ class Camera(CameraProtocol):
         return self.__config.width
 
     def get_frame_size(self) -> int:
-        if self.__camera is not None:
-            raise RuntimeError("Camera already open")
+        if self.__camera is None:
+            raise RuntimeError("Camera is not open")
 
         return self.__get_frame_size(self.__camera)
 
