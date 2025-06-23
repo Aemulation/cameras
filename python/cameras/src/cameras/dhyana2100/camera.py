@@ -51,32 +51,43 @@ class CameraConfig(ctypes.Structure):
 
 @CameraFactoryClassRegistry.register(CAMERA_NAME)
 class CameraFactory(CameraFactoryProtocol):
-    @staticmethod
-    def create(
+    def __init__(
+        self,
         camera_index: int = 0,
         enable_fan: bool = True,
         enable_TEC: bool = True,
-        number_of_copy_threads_per_buffer: int = 8,
+        number_of_copy_threads_per_buffer: int = 1,
         fast_binning: bool = True,
         number_of_frame_buffers: int = 256,
         trigger_frames: int = 1,
         bits_per_pixel: int = 12,
         input_trigger: int = 0,
         full_mode: bool = True,
-        *args,
         **kwargs,
-    ) -> CameraProtocol:
+    ) -> None:
+        self.__camera_index = camera_index
+        self.__enable_fan = enable_fan
+        self.__enable_TEC = enable_TEC
+        self.__number_of_copy_threads_per_buffer = number_of_copy_threads_per_buffer
+        self.__fast_binning = fast_binning
+        self.__number_of_frame_buffers = number_of_frame_buffers
+        self.__trigger_frames = trigger_frames
+        self.__bits_per_pixel = bits_per_pixel
+        self.__input_trigger = input_trigger
+        self.__full_mode = full_mode
+
+    def create(self) -> CameraProtocol:
         return Camera(
-            camera_index,
-            enable_fan,
-            enable_TEC,
-            number_of_copy_threads_per_buffer,
-            fast_binning,
-            number_of_frame_buffers,
-            trigger_frames,
-            bits_per_pixel,
-            input_trigger,
-            full_mode,
+            self.__camera_index,
+            self.__enable_fan,
+            self.__enable_TEC,
+            self.__number_of_copy_threads_per_buffer,
+            self.__fast_binning,
+            self.__number_of_frame_buffers,
+            self.__trigger_frames,
+            self.__bits_per_pixel,
+            self.__input_trigger,
+            self.__full_mode,
         )
 
 
@@ -207,6 +218,12 @@ class Camera(CameraProtocol):
         ]
         self.__set_temperature_control.restype = None
 
+        self.__get_frame_size = self.lib.get_frame_size
+        self.__get_frame_size.argtypes = [
+            ctypes.c_void_p,
+        ]
+        self.__set_temperature_control.restype = ctypes.c_size_t
+
     def set_framerate(self, framerate: int):
         new_config = CameraConfig(
             **(self.__config.to_dict() | {"framerate": framerate})
@@ -232,6 +249,12 @@ class Camera(CameraProtocol):
 
     def get_width(self) -> int:
         return self.__config.width
+
+    def get_frame_size(self) -> int:
+        if self.__camera is not None:
+            raise RuntimeError("Camera already open")
+
+        return self.__get_frame_size(self.__camera)
 
     def get_max_framerate(self) -> Optional[int]:
         return self.__max_config.framerate

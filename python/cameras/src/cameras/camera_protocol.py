@@ -19,6 +19,8 @@ class CameraProtocol(Protocol):
 
     def get_width(self) -> int: ...
 
+    def get_frame_size(self) -> int: ...
+
     def get_max_framerate(self) -> Optional[int]: ...
 
     def get_max_width(self) -> Optional[int]: ...
@@ -41,9 +43,12 @@ class CameraProtocol(Protocol):
 
 
 class CameraFactoryProtocol(Protocol):
-    @staticmethod
+    @abstractmethod
+    def __init__(self, **kwargs) -> None: ...
+
     @abstractmethod
     def create(
+        self,
         *args,
         **kwargs,
     ) -> CameraProtocol: ...
@@ -63,11 +68,10 @@ class CameraFactoryClassRegistry:
         return inner_wrapper
 
     @classmethod
-    def create(cls, camera_name: str, **kwargs) -> CameraProtocol:
+    def create(cls, camera_name: str, **kwargs) -> CameraFactoryProtocol:
         try:
-            camera_factory = cls.registry[camera_name]
-            camera = camera_factory.create(**kwargs)
-            return camera
+            camera_factory = cls.registry[camera_name](**kwargs)
+            return camera_factory
         except KeyError:
             raise ValueError(
                 f"Camera {camera_name} not found, available camera's are: {','.join(cls.registry.keys())}"
