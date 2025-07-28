@@ -224,7 +224,7 @@ class Camera(CameraProtocol):
         ]
         self.__set_temperature_control.restype = ctypes.c_size_t
 
-    def set_framerate(self, framerate: int):
+    def set_framerate(self, framerate: float):
         new_config = CameraConfig(
             **(self.__config.to_dict() | {"framerate": framerate})
         )
@@ -241,7 +241,7 @@ class Camera(CameraProtocol):
 
         return self.set_config(new_config)
 
-    def get_framerate(self) -> int:
+    def get_framerate(self) -> float:
         return self.__config.framerate
 
     def get_height(self) -> int:
@@ -256,7 +256,7 @@ class Camera(CameraProtocol):
 
         return self.__get_frame_size(self.__camera)
 
-    def get_max_framerate(self) -> Optional[int]:
+    def get_max_framerate(self) -> Optional[float]:
         return self.__max_config.framerate
 
     def get_max_width(self) -> Optional[int]:
