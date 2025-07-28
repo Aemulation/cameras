@@ -276,6 +276,8 @@ class Camera(CameraProtocol):
 
         self.update_configs()
         new_config = {
+            "offsetx": 0,
+            "offsety": 0,
             "full_mode": 1 if self.__full_mode else 0,
             "fast_binning": 1 if self.__fast_binning else 0,
             "trigger_frames": self.__trigger_frames,
