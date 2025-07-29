@@ -226,7 +226,7 @@ class Camera(CameraProtocol):
 
     def set_framerate(self, framerate: float):
         new_config = CameraConfig(
-            **(self.__config.to_dict() | {"framerate": framerate})
+            **(self.__config.to_dict() | {"framerate": framerate, "exposure_ms": 17})
         )
 
         return self.set_config(new_config)
