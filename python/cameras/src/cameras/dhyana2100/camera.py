@@ -220,7 +220,7 @@ class Camera(CameraProtocol):
 
         self.__get_frame_size = self.lib.get_frame_size
         self.__get_frame_size.argtypes = [
-            ctypes.c_void_p,
+            ctypes.c_uint64,
         ]
         self.__set_temperature_control.restype = ctypes.c_size_t
 
